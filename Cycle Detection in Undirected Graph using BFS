@@ -1,0 +1,32 @@
+from collections import defaultdict
+
+def isCycleDetect(node,visited,graphDict):
+    queue=[(node,-1)]
+    visited[node]=1
+    while(len(queue)>0):
+        node,prev=queue.pop(0)
+        for ngh in graphDict[node]:
+            if(visited[ngh]==0):
+                visited[ngh]=1
+                queue.append((ngh,node))
+            elif(ngh!=prev):
+                return True
+    return False
+def cycleDetection(edges, n, m):
+
+    # Write your code here.
+    # Return "Yes" if cycle id present in the graph else return "No".
+
+    graphDict=defaultdict(list)
+    for i in range(len(edges)):
+        graphDict[edges[i][0]].append(edges[i][1])
+        graphDict[edges[i][1]].append(edges[i][0])
+    
+#     print(graphDict)
+    visited=[0]*(n+1)
+    for i in range(1,n+1):
+        if(visited[i]==0):
+            if(isCycleDetect(i,visited,graphDict)):
+                return "Yes"
+    return "No"
+    
