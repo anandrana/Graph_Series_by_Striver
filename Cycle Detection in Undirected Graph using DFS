@@ -1,0 +1,53 @@
+import java.util.*;
+
+class Node{
+    int first;
+    int second;
+    public Node(int first,int second){
+        this.first=first;
+        this.second=second;
+    }
+}
+
+public class Solution {
+    public static boolean isCycleDetect(int node,int parent,ArrayList<ArrayList<Integer>> adj,boolean[] vis){
+        vis[node]=true;
+        for(int it:adj.get(node)){
+            if(vis[it]==false){
+                if(isCycleDetect(it,node,adj,vis)){
+                    return true;
+                }
+            }else{
+                if(it!=parent){
+                    return true;
+                }
+            }
+        }
+        return false;
+    } 
+    public static String cycleDetection(int[][] edges, int n, int m) {
+        // Write your code here.
+        
+        ArrayList<ArrayList<Integer>> adj=new ArrayList<>();
+        for(int i=0;i<=n;i++){
+            adj.add(new ArrayList<>());
+        }
+        for(int i=0;i<edges.length;i++){
+            adj.get(edges[i][0]).add(edges[i][1]);
+            adj.get(edges[i][1]).add(edges[i][0]);
+        }
+//         System.out.println(adj);
+        boolean[] vis=new boolean[n+1];
+        Arrays.fill(vis,false);
+        for(int i=1;i<=n;i++){
+            if(vis[i]==false){
+                if(isCycleDetect(i,-1,adj,vis)){
+                    return "Yes";
+                }
+            }
+        }
+        return "No";
+        
+    }
+    
+}
