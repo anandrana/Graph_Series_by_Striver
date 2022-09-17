@@ -1,0 +1,167 @@
+//{ Driver Code Starts
+// Initial Template for Java
+
+// Initial Template for Java
+
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+// Position this line where user code will be pasted.
+
+class GFG {
+    public static void main(String[] args) throws IOException {
+        Scanner sc = new Scanner(System.in);
+        int T = sc.nextInt();
+        while (T-- > 0) {
+            int n = sc.nextInt();
+            int m = sc.nextInt();
+            int[][] grid = new int[n][m];
+
+            for (int i = 0; i < n; i++) {
+
+                for (int j = 0; j < m; j++) {
+                    grid[i][j] = sc.nextInt();
+                }
+            }
+
+            Solution ob = new Solution();
+            int ans = ob.numberOfEnclaves(grid);
+            System.out.println(ans);
+        }
+    }
+}
+// } Driver Code Ends
+
+
+// User function Template for Java
+
+class Pair{
+    int x;
+    int y;
+    
+    public Pair(int x,int y){
+        this.x=x;
+        this.y=y;
+    }
+}
+class Solution {
+
+    boolean[][] visited;
+    
+    public void bfs(int[][] grid,boolean[][] visited,int x,int y){
+        
+        visited[x][y]=true;
+        int[] rows={-1,0,1,0};
+        int[] cols={0,1,0,-1};
+        
+        List<Pair> q=new LinkedList<>();
+        q.add(new Pair(x,y));
+        int n1=grid.length;
+        int m1=grid[0].length;
+        
+        
+        while(q.size()>0){
+            Pair p=q.get(0);
+            q.remove(0);
+            
+            int x_axis=p.x;
+            int y_axis=p.y;
+            
+            for(int i=0;i<4;i++){
+                if(x_axis+rows[i]>=0 && x_axis+rows[i]<n1 && y_axis+cols[i]>=0 && y_axis+cols[i]<m1 && grid[x_axis+rows[i]][y_axis+cols[i]]==1 && visited[x_axis+rows[i]][y_axis+cols[i]]==false){
+                    q.add(new Pair(x_axis+rows[i],y_axis+cols[i]));
+                    visited[x_axis+rows[i]][y_axis+cols[i]]=true;
+                }
+            }
+            
+        }
+    }
+    
+    public int bfs1(int[][] grid,boolean[][] visited,int x,int y){
+        
+        visited[x][y]=true;
+        int[] rows={-1,0,1,0};
+        int[] cols={0,1,0,-1};
+        
+        List<Pair> q=new LinkedList<>();
+        q.add(new Pair(x,y));
+        int n1=grid.length;
+        int m1=grid[0].length;
+        
+        int count=1;
+        while(q.size()>0){
+            Pair p=q.get(0);
+            q.remove(0);
+            
+            int x_axis=p.x;
+            int y_axis=p.y;
+            
+            for(int i=0;i<4;i++){
+                if(x_axis+rows[i]>=0 && x_axis+rows[i]<n1 && y_axis+cols[i]>=0 && y_axis+cols[i]<m1 && grid[x_axis+rows[i]][y_axis+cols[i]]==1 && visited[x_axis+rows[i]][y_axis+cols[i]]==false){
+                    q.add(new Pair(x_axis+rows[i],y_axis+cols[i]));
+                    visited[x_axis+rows[i]][y_axis+cols[i]]=true;
+                    count++;
+                }
+            }
+            
+        }
+        return count;
+    }
+    int numberOfEnclaves(int[][] grid) {
+
+        // Your code here
+        int n=grid.length;
+        int m=grid[0].length;
+        
+        //first moving sides wise
+        
+        visited=new boolean[n][m];
+        
+        //first row
+        for(int c=0;c<m;c++){
+            if(grid[0][c]==1 && visited[0][c]==false){
+                bfs(grid,visited,0,c);
+            }
+        }
+        
+        //last row
+        for(int c=0;c<m;c++){
+            if(grid[n-1][c]==1 && visited[n-1][c]==false){
+                bfs(grid,visited,n-1,c);
+            }
+        }
+        
+        
+        //first column
+        for(int r=0;r<n;r++){
+            if(grid[r][0]==1 && visited[r][0]==false){
+                bfs(grid,visited,r,0);
+            }
+        }
+        
+        //last column
+        for(int r=0;r<n;r++){
+            if(grid[r][m-1]==1 && visited[r][m-1]==false){
+                bfs(grid,visited,r,m-1);
+            }
+        }
+        
+        // for(int i=0;i<n;i++){
+        //     for(int j=0;j<m;j++){
+        //         System.out.println(visited[i][j]);
+        //     }
+        // }
+        int ans=0;
+        //checking for middle
+        for(int i=1;i<n-1;i++){
+            for(int j=1;j<m-1;j++){
+                if(grid[i][j]==1 && visited[i][j]==false){
+                    ans+=bfs1(grid,visited,i,j);
+                    
+                }
+            }
+        }
+        return ans;
+    }
+}
